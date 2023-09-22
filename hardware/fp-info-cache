@@ -1,4 +1,4 @@
-21929454808753715
+21931150064727614
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -64707,6 +64707,13 @@ DIL DIP PDIP 2.54mm 7.62mm 300mil
 0
 4
 4
+PIN
+FanPinHeader_1x04_P2.54mm_Vertical
+3-pin CPU fan Through hole pin header, see http://www.formfactors.org/developer%5Cspecs%5Crev1_2_public.pdf
+pin header 3-pin CPU fan
+0
+3
+3
 Package_BGA
 Analog_BGA-28_4.0x6.25mm_Layout4x7_P0.8mm_Ball0.45mm_Pad0.4
 Analog BGA-28 4.0mm x 6.25mm package, pitch 0.4mm pad, based on https://www.analog.com/media/en/technical-documentation/data-sheets/8063fa.pdf
