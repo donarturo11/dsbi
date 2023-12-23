@@ -1,0 +1,21 @@
+<circuit version="1.1.0" rev="2047" stepSize="1000000" stepsPS="970000" NLsteps="100000" reaStep="1000000" animate="0" >
+
+<item itemtype="LAnalizer" CircId="LAnalizer-5" mainComp="false" Show_id="false" Show_Val="false" Pos="200,-152" rotation="0" hflip="1" vflip="1" label="LAnalizer-5" idLabPos="-90,-100" labelrot="0" valLabPos="-16,20" valLabRot="0" Basic_X="135 _Pixels" Basic_Y="135 _Pixels" BufferSize="100000 Samples" TimDiv="50390208" TimPos="-5084833342" VolDiv="0.15" Tunnels=",,,,,,,," Trigger="7" TresholdR="2 V" Bus="false,false,false,false,false,false,false,false," TresholdF="2 V" TimeStep="1000 _ps" AutoExport="false" />
+
+<item itemtype="SerialPort" CircId="SerialPort-66" mainComp="false" Show_id="false" Show_Val="false" Pos="156,-52" rotation="0" hflip="1" vflip="1" label="SerialPort-66" idLabPos="-20,-32" labelrot="0" valLabPos="-16,20" valLabRot="0" Baudrate="33400 _Bauds" DataBits="8 _Bits" StopBits="1 _Bits" SerialMon="true" />
+
+<item itemtype="MCU" CircId="tiny13-1" mainComp="false" Show_id="true" Show_Val="false" Pos="-12,-160" rotation="0" hflip="1" vflip="1" label="tiny13-1" idLabPos="0,-20" labelrot="0" valLabPos="-16,20" valLabRot="0" Frequency="9.6 MHz" Program="../../../WARSZTAT/dsbi-serial-transmitter/main.hex" Auto_Load="true" saveEepr="true" Logic_Symbol="false" Rst_enabled="false" Ext_Osc="false" Wdt_enabled="false" varList="ADCH,ADCL,ACSR" eeprom="9,192,14,192,15,192,12,192,11,192,10,192,32,192,8,192,7,192,6,192,17,36,31,190,207,233,205,191,25,208,27,192,239,207,8,149,24,149,56,152,57,154,62,154,50,154,49,154,48,154,55,154,8,149,54,154,54,153,254,207,133,177,36,177," />
+
+<item itemtype="Voltage Source" CircId="Voltage Source-2" mainComp="false" ShowProp="MaxValue" Show_id="false" Show_Val="true" Pos="-88,-160" rotation="0" hflip="1" vflip="1" label="Voltage Source-2" idLabPos="-32,-48" labelrot="0" valLabPos="-8,30" valLabRot="0" Running="true" Value_Volt="0 V" MaxValue="5 V" />
+
+<item itemtype="Node" CircId="Node-68" mainComp="false" Pos="84,-136" />
+
+<item itemtype="Connector" uid="Connector-231" startpinid="Node-68-2" endpinid="LAnalizer-5-Pin1" pointList="84,-136,84,-200,112,-200" />
+
+<item itemtype="Connector" uid="Connector-23" startpinid="Voltage Source-2-outPin" endpinid="tiny13-1-PORTB3" pointList="-60,-144,-20,-144" />
+
+<item itemtype="Connector" uid="Connector-229" startpinid="SerialPort-66-pin1" endpinid="Node-68-1" pointList="116,-44,84,-44,84,-136" />
+
+<item itemtype="Connector" uid="Connector-230" startpinid="tiny13-1-PORTB1" endpinid="Node-68-0" pointList="28,-136,84,-136" />
+
+</circuit>
