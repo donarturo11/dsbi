@@ -7,22 +7,59 @@
 #define BAUDRATE 33400
 #define BITLENGTH (1000000/BAUDRATE) - 1
 #define TXPIN PB1
+#define TESTPIN PB4
+
+static uint16_t sampledValue = 0;
+static uint8_t sample_cnt = 0;
+
+void TX_setup();
+void TX_putc(uint8_t value);
+
+ISR(ADC_vect) {
+    if(sample_cnt == 8) sbi(PORTB, TESTPIN);
+    if(sample_cnt == 16) {
+        cli();
+        sbi(ADCSRA, ADSC);
+        TX_putc(0xAA);
+        cbi(PORTB, TESTPIN);
+        short adc = 0;
+        adc = sampledValue / 16;
+        sei();
+        TX_putc((adc >> 8) & 0x0F);
+        TX_putc(adc & 0xFF);
+        sample_cnt = 0;
+        sampledValue = 0;
+    }
+    sampledValue += ((ADCH << 8) | ADCL);
+    sample_cnt++;
+    sbi(ADCSRA, ADSC);
+}
+
+void testpin_init() {
+    cbi(PORTB, TESTPIN);
+}
 
 void adc_init() {
-    ADMUX |= (1 << MUX0);
-    ADMUX |= (1 << MUX1);
-    ADMUX |= (1 << REFS0);
-    ADCSRA |= (1 << ADPS2);
-    ADCSRA |= (1 << ADPS1);
-    ADCSRA |= (1 << ADPS0);
-    ADCSRA |= (1 << ADEN);
+    sbi(ADMUX, MUX0);
+    sbi(ADMUX, MUX1);
+    sbi(ADMUX, REFS0);
+    sbi(ADCSRA, ADPS2);
+    cbi(ADCSRA, ADPS1);
+    sbi(ADCSRA, ADPS0);
+    sbi(ADCSRA, ADEN);
+    sbi(ADCSRA, ADIE);
+    sbi(ADCSRA, ADIF);
 }
 
 int adc_read() {
+    sbi(PORTB, TESTPIN);
     ADCSRA |= (1 << ADSC);
     while (ADCSRA & (1 << ADSC));
+    //cbi(PORTB, TESTPIN);
     return ((ADCH << 2) | ADCL);
 }
+
+
 
 void TX_setup() {
     sbi(DDRB, TXPIN); // setup pin as output
@@ -48,11 +85,14 @@ void TX_putc(uint8_t value) {
 }
 
 int main() {
+    cli();
+    testpin_init();
+    TX_setup();
     adc_init();
+    sei();
+    sbi(ADCSRA, ADSC);
     while(1) {
-        int adc = adc_read();
-        TX_putc(0x80 | (adc & 0x3F));
-        TX_putc(0x40 | ((adc >> 6) & 0x3F));
+
     }
     return 0;
 }
