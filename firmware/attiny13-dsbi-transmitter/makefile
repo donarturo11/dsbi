@@ -20,7 +20,7 @@
 DEVICE     = attiny13
 CLOCK      = 9600000
 PROGRAMMER = -c siprog -p t13
-OBJECTS    = main.o
+OBJECTS    = main.o adc.o fifo.o
 FUSES      = -U hfuse:w:0xdf:m -U lfuse:w:0x64:m
 
 # For computing fuse byte values for other devices and options see
