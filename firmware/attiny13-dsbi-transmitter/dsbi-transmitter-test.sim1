@@ -1,12 +1,8 @@
 <circuit version="1.1.0" rev="2077" stepSize="1000000" stepsPS="970000" NLsteps="100000" reaStep="1000000" animate="0" >
 
-<item itemtype="SerialPort" CircId="SerialPort-66" mainComp="false" Show_id="false" Show_Val="false" Pos="156,-52" rotation="0" hflip="1" vflip="1" label="SerialPort-66" idLabPos="-20,-32" labelrot="0" valLabPos="-16,20" valLabRot="0" Auto="false" Baudrate="33400 _Bauds" DataBits="8 _Bits" StopBits="1 _Bits" SerialMon="true" />
-
-<item itemtype="Ground" CircId="Ground-109" mainComp="false" Show_id="false" Show_Val="false" Pos="48,-212" rotation="0" hflip="1" vflip="1" label="Ground-109" idLabPos="-16,8" labelrot="0" valLabPos="-16,20" valLabRot="0" />
+<item itemtype="Capacitor" CircId="Capacitor-107" mainComp="false" ShowProp="Capacitance" Show_id="false" Show_Val="true" Pos="48,-284" rotation="90" hflip="1" vflip="1" label="Capacitor-107" idLabPos="-16,-24" labelrot="0" valLabPos="-16,6" valLabRot="0" Capacitance="100 nF" Resistance="1e-06 Ω" InitVolt="0 V" AutoStep="1 _Steps" />
 
 <item itemtype="MCU" CircId="tiny13-1" mainComp="false" Show_id="true" Show_Val="false" Pos="-12,-160" rotation="0" hflip="1" vflip="1" label="tiny13-1" idLabPos="0,-20" labelrot="0" valLabPos="-16,20" valLabRot="0" Frequency="9.6 MHz" Program="main.hex" Auto_Load="true" saveEepr="true" Logic_Symbol="false" Rst_enabled="false" Ext_Osc="false" Wdt_enabled="false" varList="ADCH,ADCL,R00,R19,R09" eeprom="9,192,14,192,15,192,12,192,11,192,10,192,32,192,8,192,7,192,6,192,17,36,31,190,207,233,205,191,25,208,27,192,239,207,8,149,24,149,56,152,57,154,62,154,50,154,49,154,48,154,55,154,8,149,54,154,54,153,254,207,133,177,36,177," />
-
-<item itemtype="Voltage Source" CircId="Voltage Source-2" mainComp="false" ShowProp="MaxValue" Show_id="false" Show_Val="true" Pos="-80,-188" rotation="0" hflip="1" vflip="1" label="Voltage Source-2" idLabPos="-32,-48" labelrot="0" valLabPos="-8,30" valLabRot="0" Running="true" Value_Volt="2.3925 V" MaxValue="2.5 V" MinValue="0 mV" />
 
 <item itemtype="Resistor" CircId="Resistor-118" mainComp="false" ShowProp="Resistance" Show_id="false" Show_Val="true" Pos="28,-328" rotation="0" hflip="1" vflip="1" label="Resistor-118" idLabPos="-16,-24" labelrot="0" valLabPos="-16,6" valLabRot="0" Resistance="2 MΩ" />
 
@@ -14,40 +10,50 @@
 
 <item itemtype="Oscope" CircId="Oscope-92" mainComp="false" Show_id="false" Show_Val="false" Pos="200,-308" rotation="0" hflip="1" vflip="1" label="Oscope-92" idLabPos="-90,-100" labelrot="0" valLabPos="-16,20" valLabRot="0" Basic_X="135 _Pixels" Basic_Y="135 _Pixels" BufferSize="600000 Samples" TimDiv="2072177487850134016" TimPos="8530829861839972407,8530829861839972407,8530829861839972407,8530829861839972407," VolDiv="1.02651,1.02651,1.02651,1.02651," Tunnels=",,,," Trigger="4" Filter="0.2 V" Trigger="4" AutoSC="4" Tracks="2" HideCh="false,false,false,false," VolPos="1.12402e-11,1.12402e-11,1.12402e-11,1.12402e-11," />
 
-<item itemtype="Capacitor" CircId="Capacitor-107" mainComp="false" ShowProp="Capacitance" Show_id="false" Show_Val="true" Pos="48,-284" rotation="90" hflip="1" vflip="1" label="Capacitor-107" idLabPos="-16,-24" labelrot="0" valLabPos="-16,6" valLabRot="0" Capacitance="100 nF" Resistance="1e-06 Ω" InitVolt="0 V" AutoStep="1 _Steps" />
+<item itemtype="WaveGen" CircId="WaveGen-89" mainComp="false" Show_id="false" Show_Val="false" Pos="-56,-264" rotation="0" hflip="1" vflip="1" label="WaveGen-89" idLabPos="-64,-24" labelrot="0" valLabPos="-16,8" valLabRot="0" Out="false" Running="false" Wave_Type="Saw" Freq="5 Hz" Phase="0 _º" Steps="4096 _Steps" Duty="50 _%" Always_On="false" Bipolar="false" Floating="false" Semi_Ampli="0.55 V" Mid_Volt="0.55 V" />
 
-<item itemtype="WaveGen" CircId="WaveGen-89" mainComp="false" Show_id="false" Show_Val="false" Pos="-56,-264" rotation="0" hflip="1" vflip="1" label="WaveGen-89" idLabPos="-64,-24" labelrot="0" valLabPos="-16,8" valLabRot="0" Out="true" Running="true" Wave_Type="Saw" Freq="5 Hz" Phase="0 _º" Steps="4096 _Steps" Duty="50 _%" Always_On="false" Bipolar="false" Floating="false" Semi_Ampli="0.55 V" Mid_Volt="0.55 V" />
+<item itemtype="LAnalizer" CircId="LAnalizer-5" mainComp="false" Show_id="false" Show_Val="false" Pos="200,-152" rotation="0" hflip="1" vflip="1" label="LAnalizer-5" idLabPos="-90,-100" labelrot="0" valLabPos="-16,20" valLabRot="0" Basic_X="135 _Pixels" Basic_Y="135 _Pixels" BufferSize="100000 Samples" TimDiv="751787464" TimPos="-29785975367" VolDiv="0.15" Tunnels=",,,,,,,," Trigger="9" TresholdR="4 V" Bus="false,false,false,false,false,false,false,false," TresholdF="1 V" TimeStep="1000 _ps" AutoExport="false" />
 
-<item itemtype="LAnalizer" CircId="LAnalizer-5" mainComp="false" Show_id="false" Show_Val="false" Pos="196,-152" rotation="0" hflip="1" vflip="1" label="LAnalizer-5" idLabPos="-90,-100" labelrot="0" valLabPos="-16,20" valLabRot="0" Basic_X="135 _Pixels" Basic_Y="135 _Pixels" BufferSize="100000 Samples" TimDiv="503501653" TimPos="-7962990572" VolDiv="0.15" Tunnels=",,,,,,,," Trigger="9" TresholdR="4 V" Bus="false,false,false,false,false,false,false,false," TresholdF="1 V" TimeStep="1000 _ps" AutoExport="false" />
+<item itemtype="Voltage Source" CircId="Voltage Source-2" mainComp="false" ShowProp="MaxValue" Show_id="false" Show_Val="true" Pos="-80,-188" rotation="0" hflip="1" vflip="1" label="Voltage Source-2" idLabPos="-32,-48" labelrot="0" valLabPos="-8,30" valLabRot="0" Running="true" Value_Volt="3 V" MaxValue="3 V" MinValue="0 V" />
+
+<item itemtype="SerialPort" CircId="SerialPort-66" mainComp="false" Show_id="false" Show_Val="false" Pos="156,-52" rotation="0" hflip="1" vflip="1" label="SerialPort-66" idLabPos="-20,-32" labelrot="0" valLabPos="-16,20" valLabRot="0" Auto="false" Baudrate="38400 _Bauds" DataBits="8 _Bits" StopBits="1 _Bits" SerialMon="true" />
+
+<item itemtype="Ground" CircId="Ground-109" mainComp="false" Show_id="false" Show_Val="false" Pos="48,-212" rotation="0" hflip="1" vflip="1" label="Ground-109" idLabPos="-16,8" labelrot="0" valLabPos="-16,20" valLabRot="0" />
+
+<item itemtype="Node" CircId="Node-119" mainComp="false" Pos="48,-328" />
 
 <item itemtype="Node" CircId="Node-127" mainComp="false" Pos="84,-136" />
 
 <item itemtype="Node" CircId="Node-93" mainComp="false" Pos="-40,-264" />
 
-<item itemtype="Node" CircId="Node-119" mainComp="false" Pos="48,-328" />
-
-<item itemtype="Connector" uid="Connector-401" startpinid="tiny13-1-PORTB1" endpinid="Node-127-0" pointList="28,-136,84,-136" />
+<item itemtype="Node" CircId="Node-128" mainComp="false" Pos="-40,-172" />
 
 <item itemtype="Connector" uid="Connector-402" startpinid="Node-127-2" endpinid="SerialPort-66-pin1" pointList="84,-136,84,-44,116,-44" />
+
+<item itemtype="Connector" uid="Connector-374" startpinid="Node-119-2" endpinid="Capacitor-107-lPin" pointList="48,-328,48,-300" />
 
 <item itemtype="Connector" uid="Connector-300" startpinid="Oscope-92-Pin0" endpinid="Node-93-1" pointList="112,-356,-40,-356,-40,-264" />
 
 <item itemtype="Connector" uid="Connector-373" startpinid="Resistor-118-rPin" endpinid="Node-119-0" pointList="44,-328,48,-328" />
 
-<item itemtype="Connector" uid="Connector-302" startpinid="Node-93-2" endpinid="WaveGen-89-outnod" pointList="-40,-264,-40,-264" />
+<item itemtype="Connector" uid="Connector-399" startpinid="tiny13-1-PORTB4" endpinid="LAnalizer-5-Pin0" pointList="-20,-136,-28,-136,-28,-196,72,-196,72,-216,112,-216" />
 
-<item itemtype="Connector" uid="Connector-400" startpinid="Node-127-1" endpinid="LAnalizer-5-Pin1" pointList="84,-136,84,-200,108,-200" />
+<item itemtype="Connector" uid="Connector-401" startpinid="tiny13-1-PORTB1" endpinid="Node-127-0" pointList="28,-136,84,-136" />
 
 <item itemtype="Connector" uid="Connector-370" startpinid="Capacitor-117-rPin" endpinid="Resistor-118-lPin" pointList="8,-312,8,-328,12,-328" />
 
+<item itemtype="Connector" uid="Connector-403" startpinid="Voltage Source-2-outPin" endpinid="Node-128-1" pointList="-52,-172,-40,-172" />
+
 <item itemtype="Connector" uid="Connector-372" startpinid="Oscope-92-Pin1" endpinid="Node-119-1" pointList="112,-324,48,-324,48,-328" />
 
-<item itemtype="Connector" uid="Connector-399" startpinid="tiny13-1-PORTB4" endpinid="LAnalizer-5-Pin0" pointList="-20,-136,-28,-136,-28,-196,72,-196,72,-216,108,-216" />
+<item itemtype="Connector" uid="Connector-404" startpinid="tiny13-1-PORTB3" endpinid="Node-128-0" pointList="-20,-144,-40,-144,-40,-172" />
+
+<item itemtype="Connector" uid="Connector-405" startpinid="Node-128-2" endpinid="Node-93-0" pointList="-40,-172,-40,-264" />
+
+<item itemtype="Connector" uid="Connector-400" startpinid="Node-127-1" endpinid="LAnalizer-5-Pin1" pointList="84,-136,84,-200,112,-200" />
 
 <item itemtype="Connector" uid="Connector-387" startpinid="Ground-109-Gnd" endpinid="Capacitor-107-rPin" pointList="48,-228,48,-268" />
 
-<item itemtype="Connector" uid="Connector-301" startpinid="tiny13-1-PORTB3" endpinid="Node-93-0" pointList="-20,-144,-40,-144,-40,-264" />
-
-<item itemtype="Connector" uid="Connector-374" startpinid="Node-119-2" endpinid="Capacitor-107-lPin" pointList="48,-328,48,-300" />
+<item itemtype="Connector" uid="Connector-302" startpinid="Node-93-2" endpinid="WaveGen-89-outnod" pointList="-40,-264,-40,-264" />
 
 </circuit>
