@@ -16,28 +16,20 @@
 
 BluetoothSerial SerialBT;
 const int potPin = 34;
-short potValue = 0;
+unsigned short potValue = 0;
 void setup() {
-  Serial.begin(57600);
+  Serial.begin(38400);
   delay(1000);
 }
 
 void loop() {
   int sum=0;
-  char checksum;
-  potValue = analogRead(potPin)-2048;
-  Serial.write(0xAA);
-  Serial.write(0xAA);
-  Serial.write(0x04);
-  Serial.write(0x80);
-  Serial.write(0x02);
-  Serial.write((potValue >> 8)&0xFF);
-  Serial.write(potValue & 0xFF);
-  sum += 0x80;
-  sum += 0x02;
-  sum += (potValue >> 8)&0xFF;
-  sum += potValue&0xFF;
-  checksum=~sum & 0xFF;
-  Serial.write(checksum);
+  unsigned char msb_byte = 0x80;
+  unsigned char lsb_byte = 0x40;
+  potValue = analogRead(potPin);
+  msb_byte |= (potValue >> 6) & 0x3F;
+  lsb_byte |= potValue & 0x3F;
+  Serial.write( msb_byte );
+  Serial.write( lsb_byte );
   delay(2);
 }
