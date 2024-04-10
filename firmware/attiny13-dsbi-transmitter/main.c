@@ -68,23 +68,24 @@ int main() {
     adc_init();
     TIMER_init();
     sei();
-    uint8_t data = 0;
+    uint8_t byte_msb, byte_lsb;
     while(1) {
         sampledValue += adc_read();
         if (sample_cnt == 16) {
-            short adc = 0;
-            adc = (sampledValue / 16) & 0xFFFF;
-            TX_putc(0xAA);
-            //TX_putc(0x80);
-            //TX_putc(0x07);
-            //TX_putc(0x55);
-            TX_putc((adc >> 8) & 0xFF);
-            TX_putc(adc & 0xFF);
-            _delay_us(20);
+            uint16_t adc = 0;
+            byte_msb = 0x80;
+            byte_lsb = 0x40;
+            adc = (sampledValue / 4);
+            byte_msb |= (adc >> 6) & 0x3F;
+            byte_lsb |= adc & 0x3F;
+            _delay_us(10);
+            TX_putc( byte_msb );
+            TX_putc( byte_lsb );
+            _delay_us(10);
             sample_cnt = 0;
             sampledValue = 0;
         } else {
-            _delay_us(100);
+            _delay_us(0);
             sample_cnt++;
         }
     }
