@@ -2,6 +2,14 @@
 #include "global.h"
 #include "tx.h"
 
+/************************************
+   (1) B5    Vcc
+       B3    B2
+in --> B4    B1 ---> TX 38400 bauds
+       GND   B0
+
+************************************/
+
 void send_2byte_raw(uint16_t val) {
     uint8_t byte_msb, byte_lsb;
     byte_msb = 0x80;
