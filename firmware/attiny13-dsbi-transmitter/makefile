@@ -19,10 +19,11 @@
 
 DEVICE     = attiny13
 CLOCK      = 9600000
-PROGRAMMER = -c siprog -p t13
+PROGRAMMER = -c usbasp-clone -p t13 -b 1200 -F
+#PROGRAMMER = -c siprog -p t13 -b 1200 -F
 OBJECTS    = main.o adc.o fifo.o tx.o
-FUSES      = -U hfuse:w:0xdf:m -U lfuse:w:0x64:m
-
+#FUSES      = -U hfuse:w:0xdf:m -U lfuse:w:0x64:m
+FUSES      = -U lfuse:w:0x6A:m -U hfuse:w:0xFF:m -U lock:w:0xFF:m
 # For computing fuse byte values for other devices and options see
 # the fuse bit calculator at http://www.engbedded.com/fusecalc/
 
