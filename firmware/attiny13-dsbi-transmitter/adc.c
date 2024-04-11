@@ -1,8 +1,6 @@
 #include "global.h"
 #include "adc.h"
 
-
-
 void adc_init() {
     sbi(ADMUX, MUX0);
     sbi(ADMUX, MUX1);
@@ -20,4 +18,12 @@ uint16_t adc_read() {
     ADCSRA |= (1 << ADSC);
     while (ADCSRA & (1 << ADSC));
     return ((ADCH << 8) | ADCL);
+}
+
+uint16_t adc_oversample() {
+    uint32_t ADCsum = 0;
+    for (uint8_t i=0; i<16; i++) {
+        ADCsum += adc_read();
+    }
+    return (ADCsum >> 2) & 0xFFFF;
 }
