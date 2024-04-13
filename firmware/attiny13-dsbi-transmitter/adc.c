@@ -2,28 +2,25 @@
 #include "adc.h"
 
 void adc_init() {
-    sbi(ADMUX, MUX0);
+    cbi(ADMUX, MUX0);
     sbi(ADMUX, MUX1);
     sbi(ADMUX, REFS0);
-    sbi(ADCSRA, ADPS2);
-    cbi(ADCSRA, ADPS1);
-    sbi(ADCSRA, ADPS0);
+    cbi(ADCSRA, ADPS2);
+    sbi(ADCSRA, ADPS1);
+    cbi(ADCSRA, ADPS0);
     sbi(ADCSRA, ADEN);
-    //sbi(ADCSRA, ADIE);
-    //sbi(ADCSRA, ADIF);
+}
+
+uint16_t adc_sample() {
+    ADCSRA |= (1 << ADSC);
+    while (ADCSRA & (1 << ADSC));
+    return ADC;
 }
 
 uint16_t adc_read() {
-    //sbi(PORTB, TESTPIN);
-    ADCSRA |= (1 << ADSC);
-    while (ADCSRA & (1 << ADSC));
-    return ((ADCH << 8) | ADCL);
-}
-
-uint16_t adc_oversample() {
-    uint32_t ADCsum = 0;
+    uint32_t adc_sum = 0;
     for (uint8_t i=0; i<16; i++) {
-        ADCsum += adc_read();
+        adc_sum += adc_sample();
     }
-    return (ADCsum >> 2) & 0xFFFF;
+    return (adc_sum >> 2) & 0xFFFF;
 }
