@@ -5,7 +5,7 @@
 /************************************
    (1) B5    Vcc
        B3    B2
-in --> B4    B1 ---> TX 38400 bauds
+in --> B4    B1 ---> TX 19200 bauds
        GND   B0
 
 ************************************/
@@ -19,24 +19,17 @@ void send_2byte_raw(uint16_t val) {
     TX_putc( byte_msb );
     TX_putc( byte_lsb );
 }
-
-void testpin_init() {
-    cbi(PORTB, TESTPIN);
-}
-
+static uint16_t adc_value = 0;
 int main() {
     cli();
-    testpin_init();
     TX_init();
     adc_init();
+    _delay_ms(1000);
     sei();
     while(1) {
-        sbi(PORTB, TESTPIN);
-        uint16_t adc = adc_oversample();
-        cbi(PORTB, TESTPIN);
-        _delay_us(15);
-        send_2byte_raw(adc);
-        _delay_us(700);
+        adc_value = adc_read();
+        send_2byte_raw(adc_value);
+        _delay_us(607);
     }
     return 0;
 }
