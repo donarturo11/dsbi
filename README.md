@@ -27,6 +27,4 @@ unsigned char secondByte = 01LL LLLL # ( 0x40 |   (meteredValue & 0x3F) )
 * Software UART 8-N-2
 * Baudrate: 19200
 # Compatible software
-* [BrainwaveOSC](https://github.com/trentbrooks/BrainWaveOSC)
 * [QBrainwaveOSC](https://github.com/donarturo11/QBrainwaveOSC)
-* [libThinkGearCpp](https://github.com/donarturo11/libThinkGearCpp)
