@@ -5,7 +5,12 @@ DEFINITIONS =
 
 include config/$(CONFIG)/Makefile.mk
 
+# UART_MODE: 
+# - SWUART (Very simple software UART written in pure C)
+# - AVR305 (assembly software UART described in AVR305 datasheet with small modifications)
+UART_MODE ?= SWUART
 BAUD_RATE ?= 19200
+
 UARTPORT ?= B
 TX ?= 1
 RX ?= 0
@@ -14,6 +19,7 @@ RX ?= 0
 UART_PORT = PORT${UARTPORT}
 UART_PIN = PIN${UARTPORT}
 UART_DDR = DDR${UARTPORT}
+DEFINITIONS += -D$(UART_MODE)
 DEFINITIONS += -DBAUD_RATE=$(BAUD_RATE)
 
 # software UART
@@ -31,43 +37,78 @@ DUDE = avrdude
 PROGRAMMER ?= siprog
 DUDEFLAGS = -v -p $(MCU) -c $(PROGRAMMER)
 
-CFLAGS = -Wall -Os -I. -mmcu=$(MCU) -DF_CPU=$(F_CPU)
+TMPDIR ?= .tmp-$(MCU)
+OUTPUT = out
+
+CFLAGS = -mmcu=$(MCU) -DF_CPU=$(F_CPU)
+CFLAGS += -Wall -Os
+CFLAGS += -save-temps=obj
+#CFLAGS += -flto
+#CFLAGS += -mcall-prologues
+#CFLAGS += -mtiny-stack
+CFLAGS += -I.
 CFLAGS += -I./config/$(CONFIG)/
 CFLAGS += $(DEFINITIONS)
-OBJFLAGS = -j .text -j .data
+SECTIONS = -j .text 
+SECTIONS += -j .data
+SECTIONS += -j .bss 
+SECTIONS += -j .bootloader
 OBJECTS = main.o 
+OBJECTS += buffer.o 
+OBJECTS += adc.o 
 
-all: $(FIRMWARENAME).hex $(FIRMWARENAME).bin $(FIRMWARENAME).asm
 
-%.hex: %.elf
-	$(OBJCOPY) $(OBJFLAGS) -O ihex $< $@
+ifeq ($(UART_MODE), SWUART)
+OBJECTS += swuart.o
+else ifeq ($(UART_MODE), AVR305)
+OBJECTS += avr305.o 
+endif
 
-%.bin: %.elf
-	$(OBJCOPY) $(OBJFLAGS) -O binary $< $@
+OBJ_TMP := $(patsubst %,$(TMPDIR)/%,$(OBJECTS))
 
-$(FIRMWARENAME).asm: $(FIRMWARENAME).hex
-	avr-objdump --no-show-raw-insn $(OBJFLAGS) -m$(AVRARCH) -D -S $(FIRMWARENAME).elf > $@
+.PHONY: all output tmpdir clean
 
-$(FIRMWARENAME).elf: $(OBJECTS)
+all: $(OUTPUT)/$(FIRMWARENAME).hex $(OUTPUT)/$(FIRMWARENAME).bin $(OUTPUT)/$(FIRMWARENAME).asm
+
+$(OUTPUT)/%.hex: $(OUTPUT)/%.elf | output
+	$(OBJCOPY) -O ihex $< $@
+
+$(OUTPUT)/%.bin: $(OUTPUT)/%.elf | output
+	$(OBJCOPY) $(SECTIONS) -O binary $< $@
+
+$(OUTPUT)/$(FIRMWARENAME).asm: | output
+	avr-objdump --no-show-raw-insn $(SECTIONS) -m$(AVRARCH) -D -Sz $(OUTPUT)/$(FIRMWARENAME).elf > $@
+
+$(OUTPUT)/$(FIRMWARENAME).elf: $(OBJ_TMP) | output
 	$(CC) $(CFLAGS) -o $@ $^
-	avr-size --format=avr --mcu=$(MCU) $(FIRMWARENAME).elf
+	avr-size --format=avr --mcu=$(MCU) $(OUTPUT)/$(FIRMWARENAME).elf
 
-%.o: %.c
+$(TMPDIR)/%.S: src/%.c | tmpdir
+	$(CC) $(CFLAGS) -S -o $@ $<
+
+$(TMPDIR)/%.o: src/%.c | tmpdir
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-%.o: %.S
+$(TMPDIR)/%.o: src/%.S | tmpdir
 	$(CC) $(CFLAGS) -x assembler-with-cpp -c -o $@ $<
 
 fuse:
 	$(DUDE) $(DUDEFLAGS) -e $(FUSES)
 
 flash:
-	$(DUDE) $(DUDEFLAGS) -Uflash:w:$(FIRMWARENAME).hex:i
+	$(DUDE) $(DUDEFLAGS) -Uflash:w:$(OUTPUT)/$(FIRMWARENAME).hex:i
 
 simulavr:
-	simulavr -d $(MCU) -o tracelist-$(MCU).txt
+	simulavr -d $(MCU) -o $(TMPDIR)/tracelist-$(MCU).txt
 	@echo -e "\nPress Ctrl+C to abort\n"
-	simulavr -m $(F_CPU)*1000000 -d $(MCU) -F $(F_CPU) -c vcd:tracelist-$(MCU).txt:trace-$(MCU).vcd -f $(FIRMWARENAME).elf
+	simulavr -m 22000000 -d $(MCU) -F $(F_CPU) -c vcd:$(TMPDIR)/tracelist-$(MCU).txt:$(TMPDIR)/trace-$(MCU).vcd -f $(OUTPUT)/$(FIRMWARENAME).elf
+
+tmpdir:
+	@mkdir -p $(TMPDIR)
+
+output:
+	@mkdir -p $(OUTPUT)
 
 clean:
-	$(RM) *.o *.elf *.hex *.asm *.bin tracelist*.txt *.vcd
+	$(RM) -Rvf $(TMPDIR)
+
