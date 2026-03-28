@@ -1,0 +1,23 @@
+<circuit version="1.1.0-SR1" rev="2005" stepSize="1000000" stepsPS="60000" NLsteps="100000" reaStep="100000" animate="0" >
+
+<item itemtype="SerialTerm" CircId="SerialTerm-142" mainComp="false" Show_id="false" Show_Val="false" Pos="100,-364" rotation="0" hflip="1" vflip="1" label="SerialTerm-142" idLabPos="-20,-32" labelrot="0" valLabPos="-16,20" valLabRot="0" Baudrate="19200 _Bd" DataBits="8 _bits" StopBits="1 _bits" SerialMon="true" />
+
+<item itemtype="WaveGen" CircId="WaveGen-147" mainComp="false" Show_id="false" Show_Val="false" Pos="-144,-296" rotation="0" hflip="1" vflip="1" label="WaveGen-147" idLabPos="-64,-24" labelrot="0" valLabPos="-16,8" valLabRot="0" Out="true" Running="true" Wave_Type="Random" Freq="1 kHz" Phase="0 _º" Steps="100 _Steps" Duty="50 _%" Always_On="false" Bipolar="false" Floating="false" Semi_Ampli="0.1 V" Mid_Volt="2.5 V" />
+
+<item itemtype="Oscope" CircId="Oscope-148" mainComp="false" Show_id="false" Show_Val="false" Pos="164,-256" rotation="0" hflip="1" vflip="1" label="Oscope-148" idLabPos="-90,-100" labelrot="0" valLabPos="-16,20" valLabRot="0" Basic_X="135 _px" Basic_Y="135 _px" BufferSize="600000" connectGnd="true" InputImped="10 MΩ" TimDiv="1000000000" TimPos="0,0,0,0," VolDiv="1,1,1,1," Tunnels=",,,," Trigger="4" Filter="0.1 V" AutoSC="4" Tracks="1" HideCh="false,false,false,false," VolPos="0,0,0,0," />
+
+<item itemtype="MCU" CircId="tiny13-150" mainComp="false" Show_id="true" Show_Val="false" Pos="-32,-388" rotation="0" hflip="1" vflip="1" label="tiny13-150" idLabPos="0,-20" labelrot="0" valLabPos="-16,20" valLabRot="0" Frequency="9.6 MHz" Program="../out/attiny-dsbi-transmitter-attiny13.hex" Auto_Load="false" saveEepr="true" Logic_Symbol="false" Rst_enabled="false" Ext_Osc="false" Wdt_enabled="false" MainMcu="true" />
+
+<item itemtype="Node" CircId="Node-155" mainComp="false" Pos="-60,-296" />
+
+<item itemtype="Connector" uid="Connector-66" startpinid="tiny13-150-PORTB0" endpinid="SerialTerm-142-pin0" pointList="8,-356,40,-356,40,-372,76,-372" />
+
+<item itemtype="Connector" uid="Connector-67" startpinid="tiny13-150-PORTB1" endpinid="SerialTerm-142-pin1" pointList="8,-364,60,-364,60,-356,76,-356" />
+
+<item itemtype="Connector" uid="Connector-79" startpinid="WaveGen-147-outnod" endpinid="Node-155-0" pointList="-128,-296,-60,-296" />
+
+<item itemtype="Connector" uid="Connector-80" startpinid="Node-155-2" endpinid="Oscope-148-Pin0" pointList="-60,-296,76,-296,76,-304" />
+
+<item itemtype="Connector" uid="Connector-81" startpinid="tiny13-150-PORTB4" endpinid="Node-155-1" pointList="-40,-364,-60,-364,-60,-296" />
+
+</circuit>
