@@ -1,6 +1,7 @@
 # vim: sts=4 sw=4 et:
 PROJECT_NAME = attiny-dsbi-transmitter
 CONFIG ?= attiny85
+DEBUG ?= 0
 DEFINITIONS = 
 
 include config/$(CONFIG)/Makefile.mk
@@ -42,6 +43,11 @@ OUTPUT = out
 
 CFLAGS = -mmcu=$(MCU) -DF_CPU=$(F_CPU)
 CFLAGS += -Wall -Os
+
+ifeq ($(DEBUG),1)
+CFLAGS += -g
+endif
+
 CFLAGS += -save-temps=obj
 #CFLAGS += -flto
 #CFLAGS += -mcall-prologues
