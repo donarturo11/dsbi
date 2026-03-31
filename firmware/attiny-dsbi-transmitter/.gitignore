@@ -1,4 +1,8 @@
 out*
-.tmp*
-.swp*
-.un*
+*.tmp*
+*.swp*
+*.un*
+*/*.tmp*
+*/*.swp*
+*/*.un*
+*.session.vim
