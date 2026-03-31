@@ -1,9 +1,6 @@
-/* vim: sts=4 sw=4 et: */
+/* vim: set sts=4 sw=4 et: */
 
 #include "buffer.h"
-#include <avr/io.h>
-#include <avr/interrupt.h>
-#include <util/atomic.h>
 
 volatile buffer_t OUTPUT_BUFFER;
 volatile buffer_t INPUT_BUFFER;

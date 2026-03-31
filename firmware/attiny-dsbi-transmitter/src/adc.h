@@ -1,4 +1,4 @@
-/* vim: sts=4 sw=4 et: */
+/* vim: set sts=4 sw=4 et: */
 
 #ifndef ADC_H
 #define ADC_H
@@ -19,6 +19,10 @@ register volatile uint16_t ADC_result asm("r12");
 register volatile uint8_t ADC_cnt asm("r10");
 
 void ADC_init();
-
-void _on_sampling_ready();
+void ADC_begin();
+void ADC_end();
+void ADC__timer_isr();
+void ADC_poll();
+void ADC__on_oversampling_ready();
+void ADC__on_sampling_ready();
 #endif

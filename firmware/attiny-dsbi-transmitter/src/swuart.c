@@ -1,47 +1,35 @@
-/* vim: sts=4 sw=4 et: */
+/* vim: set sts=4 sw=4 et: */
 
 #include "swuart.h"
 #include "global.h"
+#include "handlers.h"
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
 #include "swuart_config.h"
- 
-void SWUART_delay() __attribute__((naked));
-void SWUART_delay() {
-    asm volatile (
-    "ldi r16,%[delay]\n"
-    "1:\n"
-    "dec r16\n"
-    "brne 1b\n"
-    "ret\n"
-    :
-    :[delay] "i" (BAUD_DELAY_2)
-    );
-}
-
 void SWUART__txloop() {
     /* This loop can be handled by interrupt ISR */
     asm volatile (
-    "sbrc %[txcnt],7\n" 
-    "rjmp 4f\n"          /* if bit 7 is set, start bit will be sent */
-    "lsr %[txbyte]\n\t"
+    "sbrc %[txcnt],7\n\t"
+    "rjmp 4f\n\t"          /* if bit 7 is set, start bit will be sent */
+    "lsr %[txbyte]\n"
     "1:\n\t"
     "brcc 2f\n\t"
     "cbi %[txport],%[txpin]\n\t"
-    "rjmp 3f\n\t"
+    "rjmp 3f\n"
     "2:\n\t"
     "sbi %[txport],%[txpin]\n\t"
-    "nop\n"
-    "3:\n"
-    "dec %[txcnt]\n"
-    "ret\n\t"
-    "4:\n"       /* send start bit  */
-    "clt\n"
-    "bld %[txcnt],7\n"
-    "sec\n"
-    "rjmp 1b\n"
-    : 
+    "nop\n\t"
+    "3:\n\t"
+    "dec %[txcnt]\n\t"
+    "ret\n"
+    "; send start bit\n"
+    "4:\n\t"       /* send start bit  */
+    "clt\n\t"
+    "bld %[txcnt],7\n\t"
+    "sec\n\t"
+    "rjmp 1b\n\t"
+    :
     :
         [txbyte] "r" (txbyte),
         [txcnt] "r" (txcnt),
@@ -51,10 +39,20 @@ void SWUART__txloop() {
 }
 
 void SWUART__txstart() {
+    cli();
     UART_DDR |= TXMASK;
     txcnt = 1+8+STOP_BITS;
     txcnt |= (1<<7); // set bit 7 to send a start bit
-    OCR0B=(TCNT0+BAUD_DELAY)&0xFF;
+    timer0B_isr = SWUART__tx_isr;
+    asm(
+        "in r3,%[tcnt]\n\t"
+        "ldi r25,%[delay]\n\t"
+        "out %[ocr],r3\n\t"
+       ::
+         [ocr] "i" _SFR_IO_ADDR(OCR0B),
+         [tcnt] "i" _SFR_IO_ADDR(TCNT0),
+         [delay] "i" ((BAUD_DELAY))
+       );
     TIMSK|=(1<<OCIE0B);
 }
 void SWUART__txstop() {
@@ -65,42 +63,107 @@ void SWUART__txstop() {
     txcnt=0;
 }
 
-int SWUART_init() {
+void SWUART_init() {
     txcnt=0;
     txbyte=0;
     rxcnt=0;
     rxbyte=0;
 }
 
-int SWUART_put(volatile char c)
+void SWUART__tx_isr() {
+    if (txcnt) {
+      SWUART__txloop();
+    } else {
+      SWUART__txstop();
+    }
+    asm(
+         "ldi r25,%[delay]\n\t"
+         "add r3,r25\n\t"
+          :: [delay] "i" (BAUD_DELAY));
+    asm("ret\n");
+}
+
+void SWUART__start_rxlisten() {
+    UART_DDR &= ~RXMASK;
+    PCMSK |= (1<<RXPIN);
+    GIMSK |= 1<<(PCIE);
+    pcint0_isr = SWUART__rxstart;
+}
+void SWUART__stop_rxlisten() {
+    PCMSK = 0;
+    GIMSK &= ~(1<<PCIE);
+    pcint0_isr = 0;
+}
+
+volatile void (*prevISR)();
+void SWUART__rxstart()
 {
-    if (txcnt) return -1;
+    if (UART_PIN & RXMASK) return;
+    asm(
+        "ldi r25,%[delay]-4\n\t"
+        "add r2,r25\n\t"
+        "out %[ocr],r2\n\t"
+        ::
+    [delay] "i" (((uint8_t)BAUD_DELAY/2)),
+    [ocr] "i" (_SFR_IO_ADDR(OCR0A))
+    );
+    SWUART__stop_rxlisten();
+    rxcnt = 9;
+    rxbyte = 0;
+    prevISR = timer0A_isr;
+    timer0A_isr = SWUART__rx_isr;
+}
+
+void SWUART__rxstop()
+{
+    rxcnt = 0x80;
+    OCR0A = 0;
+    timer0A_isr = prevISR;
+    SWUART__start_rxlisten();
+}
+
+void SWUART__rxloop()
+{
+    asm volatile (
+    "clc\n\t"
+    "sbic %[rxport],%[rxpin]\n\t"
+    "sec\n\t"
+    "dec %[rxcnt]\n\t"
+    "ror %[rxbyte]\n\t"
+    "ret\n\t"
+    :
+    :
+        [rxbyte] "r" (rxbyte),
+        [rxcnt] "r" (rxcnt),
+        [rxport] "i" (_SFR_IO_ADDR(UART_PIN)),
+        [rxpin] "I" (RXPIN)
+    );
+}
+void SWUART__rx_isr()
+{
+    if (rxcnt) {
+      SWUART__rxloop();
+    } else {
+      SWUART__rxstop();
+    }
+    asm("ldi r25,%[delay]\n\t"
+        "add r2,r25\n\t"
+       :: [delay] "i" (BAUD_DELAY));
+    asm("ret\n\t");
+}
+
+
+uint8_t SWUART_put(volatile char c)
+{
+    if (txcnt) return 1;
     txbyte = ~c;
     SWUART__txstart();
     return 0;
 }
 
-int SWUART_get()
+uint8_t SWUART_get()
 {
-    UART_DDR &= ~RXMASK;
-    rxcnt = 0xFF;
-    rxbyte = 0;
-    wait_rx:
-        if (!(UART_PIN & RXMASK))
-            goto rx_init;
-    if (--rxcnt) goto wait_rx;
-    return -1;
-    rx_init:
-        rxcnt = 8;
-        SWUART_delay();
-    rx_loop:
-        SWUART_delay();
-        SWUART_delay();
-        if (UART_PIN & RXMASK) rxbyte |= 0x80;
-        else rxbyte &= 0x7F;
-        if(--rxcnt) {
-            rxbyte >>= 1;
-            goto rx_loop;
-        }
-    return (unsigned char) rxbyte;
-}                     
+    if (!(rxcnt & 0x80)) return 0;
+    rxcnt &= ~(1<<7);
+    return rxbyte;
+}

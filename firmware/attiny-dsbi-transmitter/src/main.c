@@ -1,12 +1,9 @@
-/* vim: sts=4 sw=4 et: */
+/* vim: set sts=4 sw=4 et: */
 
 #include <avr/io.h>
-#include <util/delay.h>
-#include <util/atomic.h>
 #include <avr/interrupt.h>
-//#include <avr/pgmspace.h>
 #include "global.h"
-#include "swuart.h"
+#include "uart.h"
 #include "buffer.h"
 #include "adc.h"
 
@@ -16,37 +13,48 @@ void build_report(void * data)
     *rep = (( *rep & 0x0FC0 ) >> 6) | (( *rep & 0x03F ) << 8) | 0x4080;
     buffer_write(&OUTPUT_BUFFER, data, 2);
 }
+volatile void (*timer0A_isr)();
+volatile void (*timer0B_isr)();
+volatile void (*pcint0_isr)();
 
 ISR(TIM0_COMPA_vect, ISR_NAKED) {
-    OCR0A=(TCNT0+SAMPLE_DELAY)&0xFF;
-    ADCSRA|=(1<<ADSC);
+    asm("in r2,%[tcnt]\n;\tdec r2":: [tcnt] "i" _SFR_IO_ADDR(TCNT0));
+    if (timer0A_isr) timer0A_isr();
+    asm(
+        "out %[ocr],r2\n"
+      ::
+      [ocr] "i" _SFR_IO_ADDR(OCR0A)
+    );
     reti();
 }
 
 ISR(TIM0_COMPB_vect, ISR_NAKED) {
-    if (txcnt) {
-      OCR0B=TCNT0+BAUD_DELAY;
-      SWUART__txloop();
-    } else {
-      SWUART__txstop();  
-    }    
+    asm("in r3,%[tcnt]\n;\tdec r3":: [tcnt] "i" _SFR_IO_ADDR(TCNT0));
+    if (timer0B_isr) timer0B_isr();
+    asm(
+      "out %[ocr],r3\n"
+      ::
+      [ocr] "i" _SFR_IO_ADDR(OCR0B)
+    );
+    reti();
+}
+
+ISR(PCINT0_vect, ISR_NAKED)
+{
+    asm("in r2,%[tcnt]\n;\tdec r2"
+        :: [tcnt] "i" _SFR_IO_ADDR(TCNT0));
+    if (pcint0_isr) pcint0_isr();
     reti();
 }
 
 ISR(ADC_vect, ISR_NAKED) {
-    if (ADC_cnt--) {
-        ADC_acc += ADC;
-    } 
-    if (!ADC_cnt) {
-        ADC_result = ADC_acc;
-        ADC_cnt=OVERSAMPLE_COUNT | 0x80;
-        ADC_acc=0;
-    }
+    ADC__on_sampling_ready();
     reti();
 }
 
+
 void setup();
-void loop(); // __attribute__((naked));
+void loop();
 int main()
 {
 
@@ -60,19 +68,16 @@ int main()
 
 void setup()
 {
+    cli();
     PORTB = 0xFF;
     DDRB = 0xFF;
-    TCCR0A=0;
-    TCCR0B=0;
-    TCNT0=0;
-    TCCR0B=(1<<CS01);
-    
     buffer_init(&INPUT_BUFFER, (void*) INPUT_BUFFER_DATA, BUFFER_SIZE);
     buffer_init(&OUTPUT_BUFFER, (void*) OUTPUT_BUFFER_DATA, BUFFER_SIZE);
-    
     SWUART_init();
+    SWUART__start_rxlisten();
     ADC_init();
-    ADC_handler.handle_data=build_report;
+    ADC_handler.fn=build_report;
+    ADC_begin();
     sei();
     TCCR0B=(1<<CS01);
 }
@@ -80,16 +85,22 @@ void setup()
 void loop()
 {
     cli();
-    if (ADC_cnt & 0x80) {
-        _on_sampling_ready();
-    }
-    if (!txcnt) {
+    ADC_poll();
+    if (!TXBUSY) {
         char byte=0x00;
         if( buffer_read(&OUTPUT_BUFFER, &byte, 1) ) {
-          txbyte = ~byte;
-          SWUART__txstart();
+          UART_put(byte);
         }
     }
-    sei();    
+    if (RXDATAREADY) {
+        char c=UART_get();
+        buffer_write(&INPUT_BUFFER, &c, 1);
+    }
+    {
+        char data[BUFFER_SIZE];
+        uint8_t n=buffer_read(&INPUT_BUFFER, data, BUFFER_SIZE);
+        buffer_write(&OUTPUT_BUFFER, data, n);
+    }
+    sei();
 }
 

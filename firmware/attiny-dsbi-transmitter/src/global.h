@@ -1,4 +1,4 @@
-/* vim: sts=4 sw=4 et: */
+/* vim: set sts=4 sw=4 et: */
 
 #ifndef GLOBAL_H
 #define GLOBAL_H

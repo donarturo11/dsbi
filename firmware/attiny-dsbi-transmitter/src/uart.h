@@ -1,4 +1,4 @@
-/* vim: sts=4 sw=4 et: */
+/* vim: set sts=4 sw=4 et: */
 
 #ifndef UART_H
 #define UART_H

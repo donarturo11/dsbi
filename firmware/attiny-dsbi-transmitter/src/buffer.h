@@ -1,9 +1,8 @@
-/* vim: sts=4 sw=4 et: */
+/* vim: set sts=4 sw=4 et: */
 
 #ifndef BUFFER_H
 #define BUFFER_H
 #include <stdint.h>
-#include <util/atomic.h>
 #ifndef BUFFER_SIZE
 #define BUFFER_SIZE 8
 #define BUFFER_MASK BUFFER_SIZE-1
