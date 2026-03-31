@@ -105,9 +105,9 @@ flash:
 	$(DUDE) $(DUDEFLAGS) -Uflash:w:$(OUTPUT)/$(FIRMWARENAME).hex:i
 
 simulavr:
-	simulavr -d $(MCU) -o $(TMPDIR)/tracelist-$(MCU).txt
+	simulavr -d $(MCU) -o $(OUTPUT)/tracelist-$(MCU).txt
 	@echo -e "\nPress Ctrl+C to abort\n"
-	simulavr -m 22000000 -d $(MCU) -F $(F_CPU) -c vcd:$(TMPDIR)/tracelist-$(MCU).txt:$(TMPDIR)/trace-$(MCU).vcd -f $(OUTPUT)/$(FIRMWARENAME).elf
+	simulavr -m 20000000 -d $(MCU) -F $(F_CPU) -c vcd:$(OUTPUT)/tracelist-$(MCU).txt:$(OUTPUT)/trace-$(MCU).vcd -f $(OUTPUT)/$(FIRMWARENAME).elf
 
 tmpdir:
 	@mkdir -p $(TMPDIR)
