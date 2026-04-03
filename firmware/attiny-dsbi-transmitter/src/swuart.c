@@ -19,7 +19,7 @@ void SWUART__txloop() {
     "rjmp 3f\n"
     "2:\n\t"
     "sbi %[txport],%[txpin]\n\t"
-    "nop\n\t"
+    ";nop\n\t"
     "3:\n\t"
     "dec %[txcnt]\n\t"
     "ret\n"
@@ -45,13 +45,14 @@ void SWUART__txstart() {
     txcnt |= (1<<7); // set bit 7 to send a start bit
     timer0B_isr = SWUART__tx_isr;
     asm(
-        "in r3,%[tcnt]\n\t"
-        "ldi r25,%[delay]\n\t"
-        "out %[ocr],r3\n\t"
+        " in r23,%[tcnt]\n\t"
+        "ldi r24,%[delay]\n\t"
+        "add r24,r23\n\t"
+        "out %[ocr],r24\n\t"
        ::
          [ocr] "i" _SFR_IO_ADDR(OCR0B),
          [tcnt] "i" _SFR_IO_ADDR(TCNT0),
-         [delay] "i" ((BAUD_DELAY))
+         [delay] "i" ((BAUD_DELAY/2))
        );
     TIMSK|=(1<<OCIE0B);
 }
@@ -62,7 +63,7 @@ void SWUART__txstop() {
     txbyte=0;
     txcnt=0;
 }
-
+//
 void SWUART_init() {
     txcnt=0;
     txbyte=0;
@@ -77,8 +78,9 @@ void SWUART__tx_isr() {
       SWUART__txstop();
     }
     asm(
-         "ldi r25,%[delay]\n\t"
-         "add r3,r25\n\t"
+         "ldi r23,%[delay]\n\t"
+         "add r24,r23\n\t"
+         ";clc\t\n"
           :: [delay] "i" (BAUD_DELAY));
     asm("ret\n");
 }
@@ -100,11 +102,15 @@ void SWUART__rxstart()
 {
     if (UART_PIN & RXMASK) return;
     asm(
-        "ldi r25,%[delay]-4\n\t"
-        "add r2,r25\n\t"
-        "out %[ocr],r2\n\t"
+        " cbi %[portb],2\n"
+        "ldi r23,%[delay]\n\t"
+        "add r24,r23\n\t"
+        ";clc \n\t"
+        "out %[ocr],r24\n\t"
+        " sbi %[portb],2\n\t"
         ::
     [delay] "i" (((uint8_t)BAUD_DELAY/2)),
+    [portb] "i" (_SFR_IO_ADDR(PORTB)),
     [ocr] "i" (_SFR_IO_ADDR(OCR0A))
     );
     SWUART__stop_rxlisten();
@@ -125,18 +131,21 @@ void SWUART__rxstop()
 void SWUART__rxloop()
 {
     asm volatile (
+    " cbi %[portb],2\n"
     "clc\n\t"
     "sbic %[rxport],%[rxpin]\n\t"
     "sec\n\t"
     "dec %[rxcnt]\n\t"
     "ror %[rxbyte]\n\t"
+    " sbi %[portb],2\n"
     "ret\n\t"
     :
     :
         [rxbyte] "r" (rxbyte),
         [rxcnt] "r" (rxcnt),
         [rxport] "i" (_SFR_IO_ADDR(UART_PIN)),
-        [rxpin] "I" (RXPIN)
+        [rxpin] "I" (RXPIN),
+        [portb] "i" (_SFR_IO_ADDR(PORTB))
     );
 }
 void SWUART__rx_isr()
@@ -146,14 +155,15 @@ void SWUART__rx_isr()
     } else {
       SWUART__rxstop();
     }
-    asm("ldi r25,%[delay]\n\t"
-        "add r2,r25\n\t"
+    asm("ldi r23,%[delay]-2\n\t"
+        "add r24,r23\n\t"
+        "; clc \n\t"
        :: [delay] "i" (BAUD_DELAY));
     asm("ret\n\t");
 }
 
 
-uint8_t SWUART_put(volatile char c)
+uint8_t SWUART_put(char c)
 {
     if (txcnt) return 1;
     txbyte = ~c;

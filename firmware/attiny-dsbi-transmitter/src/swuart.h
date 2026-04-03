@@ -5,11 +5,10 @@
 #include "swuart_config.h"
 #include <avr/io.h>
 
-//register volatile uint8_t loopcnt  asm("r8");
-register volatile uint8_t rxcnt  asm("r6");
-register volatile uint8_t rxbyte asm("r7");
-register volatile uint8_t txcnt  asm("r8");
-register volatile char    txbyte  asm("r9");
+register volatile uint8_t rxcnt  asm("r4");
+register volatile char    rxbyte asm("r5");
+register volatile uint8_t txcnt  asm("r6");
+register volatile char    txbyte asm("r7");
 
 
 #define TXBUSY (txcnt)

@@ -19,7 +19,6 @@ void ADC_init() {
     ADMUX|=(1<<MUX1);
     ADCSRA=(1<<ADEN)|(1<<ADIE);
     ADCSRA|=(1<<ADPS2)|(0<<ADPS1)|(1<<ADPS0);
-    ADCSRA|=(1<<ADPS0);
     ADC_handler.fn=ADC_nop;
     ADC_handler.data=0;
 }
@@ -70,7 +69,7 @@ void ADC__on_sampling_ready() {
 
 void ADC__timer_isr() {
     ADCSRA|=(1<<ADSC);
-    asm ("ldi r25,%[delay]\n\t"
-         "add r2,r25\n\t"
+    asm ("ldi r23,%[delay]\n\t"
+         "add r24,r23\n\t"
          ::[delay] "i" (SAMPLE_DELAY));
 }

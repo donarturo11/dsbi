@@ -3,8 +3,6 @@
 #ifndef HANDLERS_H
 #define HANDLERS_H
 
-extern volatile void (*timer0A_isr)();
-extern volatile void (*timer0B_isr)();
 
 typedef struct {
     void (*fn)(void*);
@@ -18,6 +16,7 @@ typedef struct {
 
 extern volatile void (*timer0A_isr)();
 extern volatile void (*timer0B_isr)();
+extern volatile void (*adc_isr)();
 extern volatile void (*pcint0_isr)();
 
 typedef struct {

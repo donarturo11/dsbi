@@ -7,7 +7,7 @@
 #include "buffer.h"
 #include "adc.h"
 
-void build_report(void * data)
+static void build_report(void * data)
 {
     uint16_t * rep = (uint16_t *) data;
     *rep = (( *rep & 0x0FC0 ) >> 6) | (( *rep & 0x03F ) << 8) | 0x4080;
@@ -18,10 +18,10 @@ volatile void (*timer0B_isr)();
 volatile void (*pcint0_isr)();
 
 ISR(TIM0_COMPA_vect, ISR_NAKED) {
-    asm("in r2,%[tcnt]\n;\tdec r2":: [tcnt] "i" _SFR_IO_ADDR(TCNT0));
+    asm("in r24,%[tcnt]":: [tcnt] "i" _SFR_IO_ADDR(TCNT0));
     if (timer0A_isr) timer0A_isr();
     asm(
-        "out %[ocr],r2\n"
+        "out %[ocr],r24\n"
       ::
       [ocr] "i" _SFR_IO_ADDR(OCR0A)
     );
@@ -29,10 +29,10 @@ ISR(TIM0_COMPA_vect, ISR_NAKED) {
 }
 
 ISR(TIM0_COMPB_vect, ISR_NAKED) {
-    asm("in r3,%[tcnt]\n;\tdec r3":: [tcnt] "i" _SFR_IO_ADDR(TCNT0));
+    asm("in r24,%[tcnt]":: [tcnt] "i" _SFR_IO_ADDR(TCNT0));
     if (timer0B_isr) timer0B_isr();
     asm(
-      "out %[ocr],r3\n"
+      "out %[ocr],r24\n"
       ::
       [ocr] "i" _SFR_IO_ADDR(OCR0B)
     );
@@ -41,7 +41,7 @@ ISR(TIM0_COMPB_vect, ISR_NAKED) {
 
 ISR(PCINT0_vect, ISR_NAKED)
 {
-    asm("in r2,%[tcnt]\n;\tdec r2"
+    asm("in r24,%[tcnt]"
         :: [tcnt] "i" _SFR_IO_ADDR(TCNT0));
     if (pcint0_isr) pcint0_isr();
     reti();
@@ -57,7 +57,6 @@ void setup();
 void loop();
 int main()
 {
-
     setup();
     for(;;)
     {
@@ -79,7 +78,11 @@ void setup()
     ADC_handler.fn=build_report;
     ADC_begin();
     sei();
+#if TIMER_PRESCALER == 8
     TCCR0B=(1<<CS01);
+#elif TIMER_PRESCALER == 64
+    TCCR0B=(1<<CS01) | (1<<CS00);
+#endif
 }
 
 void loop()

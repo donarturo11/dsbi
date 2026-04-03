@@ -1,17 +1,20 @@
-# vim: sts=4 sw=4 et:
+# vim: set noexpandtab:
 PROJECT_NAME = attiny-dsbi-transmitter
 CONFIG ?= attiny85
 DEBUG ?= 0
+SAMPLE_RATE ?= 512
+TIMER_PRESCALER ?= 8
 DEFINITIONS = 
 
 include config/$(CONFIG)/Makefile.mk
 
+DEFINITIONS += -DSAMPLE_RATE=$(SAMPLE_RATE)
+DEFINITIONS += -DTIMER_PRESCALER=$(TIMER_PRESCALER)
 # UART_MODE: 
 # - SWUART (Very simple software UART written in pure C)
-# - AVR305 (assembly software UART described in AVR305 datasheet with small modifications)
+# TODO: add HWUART (implementation for hardware UART)
 UART_MODE ?= SWUART
 BAUD_RATE ?= 19200
-
 UARTPORT ?= B
 TX ?= 1
 RX ?= 0
@@ -55,19 +58,17 @@ CFLAGS += -save-temps=obj
 CFLAGS += -I.
 CFLAGS += -I./config/$(CONFIG)/
 CFLAGS += $(DEFINITIONS)
-SECTIONS = -j .text 
+SECTIONS = -j .text
 SECTIONS += -j .data
 SECTIONS += -j .bss 
 SECTIONS += -j .bootloader
-OBJECTS = main.o 
-OBJECTS += buffer.o 
-OBJECTS += adc.o 
+OBJECTS = main.o
+OBJECTS += buffer.o
+OBJECTS += adc.o
 
 
 ifeq ($(UART_MODE), SWUART)
 OBJECTS += swuart.o
-else ifeq ($(UART_MODE), AVR305)
-OBJECTS += avr305.o 
 endif
 
 OBJ_TMP := $(patsubst %,$(TMPDIR)/%,$(OBJECTS))
@@ -117,4 +118,4 @@ output:
 
 clean:
 	$(RM) -Rvf $(TMPDIR)
-
+	$(RM) -v $(OUTPUT)/$(FIRMWARENAME).*
