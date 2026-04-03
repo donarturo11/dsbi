@@ -5,4 +5,4 @@ out*
 */*.tmp*
 */*.swp*
 */*.un*
-*.session.vim
+*.vim
