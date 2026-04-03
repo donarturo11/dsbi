@@ -1,23 +1,39 @@
-<circuit version="1.1.0-SR1" rev="2005" stepSize="1000000" stepsPS="60000" NLsteps="100000" reaStep="100000" animate="0" >
+<circuit version="1.1.0-SR1" rev="2005" stepSize="1000000" stepsPS="10000" NLsteps="100000" reaStep="100000" animate="0" >
 
-<item itemtype="SerialTerm" CircId="SerialTerm-142" mainComp="false" Show_id="false" Show_Val="false" Pos="100,-364" rotation="0" hflip="1" vflip="1" label="SerialTerm-142" idLabPos="-20,-32" labelrot="0" valLabPos="-16,20" valLabRot="0" Baudrate="19200 _Bd" DataBits="8 _bits" StopBits="1 _bits" SerialMon="false" />
+<item itemtype="SerialTerm" CircId="SerialTerm-142" mainComp="false" Show_id="false" Show_Val="false" Pos="100,-364" rotation="0" hflip="1" vflip="1" label="SerialTerm-142" idLabPos="-20,-32" labelrot="0" valLabPos="-16,20" valLabRot="0" Baudrate="19200 _Bd" DataBits="8 _bits" StopBits="1 _bits" SerialMon="true" />
 
 <item itemtype="MCU" CircId="tiny85-146" mainComp="false" Show_id="true" Show_Val="false" Pos="-40,-380" rotation="0" hflip="1" vflip="1" label="tiny85-146" idLabPos="0,-20" labelrot="0" valLabPos="-16,20" valLabRot="0" Frequency="16 MHz" Program="../out/attiny-dsbi-transmitter-attiny85.hex" Auto_Load="false" saveEepr="true" Logic_Symbol="false" Rst_enabled="false" Ext_Osc="false" Wdt_enabled="false" Clk_Out="false" MainMcu="true" />
 
-<item itemtype="WaveGen" CircId="WaveGen-147" mainComp="false" Show_id="false" Show_Val="false" Pos="-144,-296" rotation="0" hflip="1" vflip="1" label="WaveGen-147" idLabPos="-64,-24" labelrot="0" valLabPos="-16,8" valLabRot="0" Out="true" Running="true" Wave_Type="Random" Freq="1 kHz" Phase="0 _º" Steps="100 _Steps" Duty="50 _%" Always_On="false" Bipolar="false" Floating="false" Semi_Ampli="0.1 V" Mid_Volt="2.5 V" />
+<item itemtype="WaveGen" CircId="WaveGen-147" mainComp="false" Show_id="false" Show_Val="false" Pos="-144,-296" rotation="0" hflip="1" vflip="1" label="WaveGen-147" idLabPos="-64,-24" labelrot="0" valLabPos="-16,8" valLabRot="0" Out="false" Running="false" Wave_Type="Random" Freq="1 kHz" Phase="0 _º" Steps="100 _Steps" Duty="50 _%" Always_On="false" Bipolar="false" Floating="false" Semi_Ampli="0.1 V" Mid_Volt="2.5 V" />
 
 <item itemtype="Oscope" CircId="Oscope-148" mainComp="false" Show_id="false" Show_Val="false" Pos="164,-256" rotation="0" hflip="1" vflip="1" label="Oscope-148" idLabPos="-90,-100" labelrot="0" valLabPos="-16,20" valLabRot="0" Basic_X="135 _px" Basic_Y="135 _px" BufferSize="600000" connectGnd="true" InputImped="10 MΩ" TimDiv="1000000000" TimPos="0,0,0,0," VolDiv="1,1,1,1," Tunnels=",,,," Trigger="4" Filter="0.1 V" AutoSC="4" Tracks="1" HideCh="false,false,false,false," VolPos="0,0,0,0," />
 
+<item itemtype="LAnalizer" CircId="LAnalizer-150" mainComp="false" Show_id="false" Show_Val="false" Pos="252,-420" rotation="0" hflip="1" vflip="1" label="LAnalizer-150" idLabPos="-90,-100" labelrot="0" valLabPos="-16,20" valLabRot="0" Basic_X="135 _px" Basic_Y="135 _px" BufferSize="100000" connectGnd="true" InputImped="10 MΩ" TimDiv="77458617" TimPos="-9757944964" VolDiv="0.15" Tunnels=",,,,,,,," Trigger="9" TimeStep="1000 _ps" AutoExport="false" TresholdR="2.5 V" Bus="false,false,false,false,false,false,false,false," TresholdF="2.5 V" />
+
 <item itemtype="Node" CircId="Node-149" mainComp="false" Pos="-84,-296" />
 
-<item itemtype="Connector" uid="Connector-59" startpinid="tiny85-146-PORTB1" endpinid="SerialTerm-142-pin1" pointList="0,-356,76,-356" />
+<item itemtype="Node" CircId="Node-151" mainComp="false" Pos="44,-372" />
 
-<item itemtype="Connector" uid="Connector-60" startpinid="tiny85-146-PORTB0" endpinid="SerialTerm-142-pin0" pointList="0,-348,44,-348,44,-372,76,-372" />
+<item itemtype="Node" CircId="Node-152" mainComp="false" Pos="64,-356" />
 
 <item itemtype="Connector" uid="Connector-62" startpinid="Node-149-1" endpinid="tiny85-146-PORTB4" pointList="-84,-296,-84,-356,-48,-356" />
 
 <item itemtype="Connector" uid="Connector-63" startpinid="WaveGen-147-outnod" endpinid="Node-149-0" pointList="-128,-296,-84,-296" />
 
 <item itemtype="Connector" uid="Connector-64" startpinid="Node-149-2" endpinid="Oscope-148-Pin0" pointList="-84,-296,76,-296,76,-304" />
+
+<item itemtype="Connector" uid="Connector-65" startpinid="tiny85-146-PORTB2" endpinid="LAnalizer-150-Pin0" pointList="0,-364,24,-364,24,-484,164,-484" />
+
+<item itemtype="Connector" uid="Connector-66" startpinid="Node-151-1" endpinid="LAnalizer-150-Pin1" pointList="44,-372,44,-468,164,-468" />
+
+<item itemtype="Connector" uid="Connector-67" startpinid="tiny85-146-PORTB0" endpinid="Node-151-0" pointList="0,-348,44,-348,44,-372" />
+
+<item itemtype="Connector" uid="Connector-68" startpinid="Node-151-2" endpinid="SerialTerm-142-pin0" pointList="44,-372,76,-372" />
+
+<item itemtype="Connector" uid="Connector-69" startpinid="Node-152-1" endpinid="LAnalizer-150-Pin2" pointList="64,-356,64,-452,164,-452" />
+
+<item itemtype="Connector" uid="Connector-70" startpinid="tiny85-146-PORTB1" endpinid="Node-152-0" pointList="0,-356,64,-356" />
+
+<item itemtype="Connector" uid="Connector-71" startpinid="Node-152-2" endpinid="SerialTerm-142-pin1" pointList="64,-356,76,-356" />
 
 </circuit>
