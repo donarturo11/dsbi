@@ -3,6 +3,7 @@ PROJECT_NAME = attiny-dsbi-transmitter
 CONFIG ?= attiny85
 DEBUG ?= 0
 SAMPLE_RATE ?= 512
+ADC_AVERAGING ?= 1
 TIMER_PRESCALER ?= 8
 DEFINITIONS = 
 
@@ -10,6 +11,7 @@ include config/$(CONFIG)/Makefile.mk
 
 DEFINITIONS += -DSAMPLE_RATE=$(SAMPLE_RATE)
 DEFINITIONS += -DTIMER_PRESCALER=$(TIMER_PRESCALER)
+DEFINITIONS += -DADC_AVERAGING=$(ADC_AVERAGING)
 # UART_MODE: 
 # - SWUART (Very simple software UART written in pure C)
 # TODO: add HWUART (implementation for hardware UART)

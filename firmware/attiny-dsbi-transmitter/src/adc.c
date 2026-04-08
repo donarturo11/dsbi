@@ -48,7 +48,8 @@ void ADC__on_oversampling_ready() {
     uint16_t result;
     ADC_cnt &= 0x7F;
     ADC_result >>= DECIMATION_COUNT;
-    result = ADC_result;
+    ADC_result /= ADC_AVERAGING;
+    result = (uint16_t) ADC_result;
     ADC_result = 0;
     ADC_handler.data=&result;
     if (ADC_handler.fn)
@@ -58,7 +59,7 @@ void ADC__on_oversampling_ready() {
 
 void ADC__on_sampling_ready() {
     if (ADC_cnt--) {
-        ADC_acc += ADC;
+        ADC_acc += (uint32_t) ADC;
     }
     if (!ADC_cnt) {
         ADC_result = ADC_acc;
