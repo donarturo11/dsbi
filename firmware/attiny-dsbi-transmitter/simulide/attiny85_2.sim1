@@ -1,0 +1,75 @@
+<circuit version="1.1.0-SR1" rev="2005" stepSize="1000000" stepsPS="40000" NLsteps="100000" reaStep="100000" animate="0" >
+
+<item itemtype="SerialTerm" CircId="SerialTerm-142" mainComp="false" Show_id="false" Show_Val="false" Pos="100,-364" rotation="0" hflip="1" vflip="1" label="SerialTerm-142" idLabPos="-20,-32" labelrot="0" valLabPos="-16,20" valLabRot="0" Baudrate="19200 _Bd" DataBits="8 _bits" StopBits="1 _bits" SerialMon="false" />
+
+<item itemtype="MCU" CircId="tiny85-146" mainComp="false" Show_id="true" Show_Val="false" Pos="-40,-380" rotation="0" hflip="1" vflip="1" label="tiny85-146" idLabPos="0,-20" labelrot="0" valLabPos="-16,20" valLabRot="0" Frequency="16 MHz" Program="../out/attiny-dsbi-transmitter-attiny85.hex" Auto_Load="true" saveEepr="true" Logic_Symbol="false" Rst_enabled="false" Ext_Osc="false" Wdt_enabled="false" Clk_Out="false" MainMcu="true" />
+
+<item itemtype="Oscope" CircId="Oscope-148" mainComp="false" Show_id="false" Show_Val="false" Pos="124,-256" rotation="0" hflip="1" vflip="1" label="Oscope-148" idLabPos="-90,-100" labelrot="0" valLabPos="-16,20" valLabRot="0" Basic_X="135 _px" Basic_Y="135 _px" BufferSize="600000" connectGnd="true" InputImped="10 MΩ" TimDiv="18976313827" TimPos="77863546140,77863546140,77863546140,77863546140," VolDiv="0.05,0.05,0.05,0.05," Tunnels=",,,," Trigger="4" Filter="0.1 V" AutoSC="4" Tracks="1" HideCh="false,false,false,false," VolPos="0.0036,0.0036,0.0036,0.0036," />
+
+<item itemtype="LAnalizer" CircId="LAnalizer-150" mainComp="false" Show_id="false" Show_Val="false" Pos="252,-420" rotation="0" hflip="1" vflip="1" label="LAnalizer-150" idLabPos="-90,-100" labelrot="0" valLabPos="-16,20" valLabRot="0" Basic_X="135 _px" Basic_Y="135 _px" BufferSize="100000" connectGnd="true" InputImped="10 MΩ" TimDiv="70559515" TimPos="-51224773655" VolDiv="0.15" Tunnels=",,,,,,,," Trigger="9" TimeStep="1000 _ps" AutoExport="false" TresholdR="2.5 V" Bus="false,false,false,false,false,false,false,false," TresholdF="2.5 V" />
+
+<item itemtype="WaveGen" CircId="WaveGen-159" mainComp="false" Show_id="false" Show_Val="false" Pos="-232,-324" rotation="0" hflip="1" vflip="1" label="WaveGen-159" idLabPos="-64,-24" labelrot="0" valLabPos="-16,8" valLabRot="0" Out="true" Running="true" Wave_Type="Sine" Freq="10 Hz" Phase="0 _º" Steps="100 _Steps" Duty="50 _%" Always_On="false" Bipolar="false" Floating="false" Semi_Ampli="0.1 V" Mid_Volt="0.1 V" />
+
+<item itemtype="Resistor" CircId="Resistor-160" mainComp="false" ShowProp="Resistance" Show_id="false" Show_Val="true" Pos="-188,-324" rotation="0" hflip="1" vflip="1" label="Resistor-160" idLabPos="-16,-24" labelrot="0" valLabPos="-16,6" valLabRot="0" Resistance="60 Ω" />
+
+<item itemtype="Resistor" CircId="Resistor-161" mainComp="false" ShowProp="Resistance" Show_id="false" Show_Val="true" Pos="-188,-348" rotation="0" hflip="1" vflip="1" label="Resistor-161" idLabPos="-16,-24" labelrot="0" valLabPos="-16,6" valLabRot="0" Resistance="3.3 kΩ" />
+
+<item itemtype="Capacitor" CircId="Capacitor-162" mainComp="false" ShowProp="Capacitance" Show_id="false" Show_Val="true" Pos="-180,-280" rotation="90" hflip="1" vflip="1" label="Capacitor-162" idLabPos="-16,-24" labelrot="0" valLabPos="-16,6" valLabRot="0" Capacitance="10 µF" Resistance="1 µΩ" InitVolt="0 V" ReaStep="0 ns" />
+
+<item itemtype="Ground" CircId="Ground-166" mainComp="false" Show_id="false" Show_Val="false" Pos="-180,-240" rotation="0" hflip="1" vflip="1" label="Ground-166" idLabPos="-16,8" labelrot="0" valLabPos="-16,20" valLabRot="0" />
+
+<item itemtype="Capacitor" CircId="Capacitor-194" mainComp="false" ShowProp="Capacitance" Show_id="false" Show_Val="true" Pos="-184,-384" rotation="360" hflip="1" vflip="1" label="Capacitor-194" idLabPos="-16,-24" labelrot="0" valLabPos="-16,6" valLabRot="0" Capacitance="47 nF" Resistance="1 µΩ" InitVolt="0 V" ReaStep="0 ns" />
+
+<item itemtype="Node" CircId="Node-151" mainComp="false" Pos="44,-372" />
+
+<item itemtype="Node" CircId="Node-152" mainComp="false" Pos="64,-356" />
+
+<item itemtype="Node" CircId="Node-163" mainComp="false" Pos="-172,-324" />
+
+<item itemtype="Node" CircId="Node-187" mainComp="false" Pos="-64,-324" />
+
+<item itemtype="Node" CircId="Node-195" mainComp="false" Pos="-64,-384" />
+
+<item itemtype="Node" CircId="Node-196" mainComp="false" Pos="-168,-324" />
+
+<item itemtype="Connector" uid="Connector-65" startpinid="tiny85-146-PORTB2" endpinid="LAnalizer-150-Pin0" pointList="0,-364,24,-364,24,-484,164,-484" />
+
+<item itemtype="Connector" uid="Connector-66" startpinid="Node-151-1" endpinid="LAnalizer-150-Pin1" pointList="44,-372,44,-468,164,-468" />
+
+<item itemtype="Connector" uid="Connector-67" startpinid="tiny85-146-PORTB0" endpinid="Node-151-0" pointList="0,-348,44,-348,44,-372" />
+
+<item itemtype="Connector" uid="Connector-68" startpinid="Node-151-2" endpinid="SerialTerm-142-pin0" pointList="44,-372,76,-372" />
+
+<item itemtype="Connector" uid="Connector-69" startpinid="Node-152-1" endpinid="LAnalizer-150-Pin2" pointList="64,-356,64,-452,164,-452" />
+
+<item itemtype="Connector" uid="Connector-70" startpinid="tiny85-146-PORTB1" endpinid="Node-152-0" pointList="0,-356,64,-356" />
+
+<item itemtype="Connector" uid="Connector-71" startpinid="Node-152-2" endpinid="SerialTerm-142-pin1" pointList="64,-356,76,-356" />
+
+<item itemtype="Connector" uid="Connector-88" startpinid="WaveGen-159-outnod" endpinid="Resistor-160-lPin" pointList="-216,-324,-204,-324" />
+
+<item itemtype="Connector" uid="Connector-91" startpinid="Resistor-160-rPin" endpinid="Node-163-0" pointList="-172,-324,-172,-324" />
+
+<item itemtype="Connector" uid="Connector-92" startpinid="Node-163-2" endpinid="Resistor-161-rPin" pointList="-172,-324,-172,-348" />
+
+<item itemtype="Connector" uid="Connector-100" startpinid="Ground-166-Gnd" endpinid="Capacitor-162-rPin" pointList="-180,-256,-180,-264" />
+
+<item itemtype="Connector" uid="Connector-158" startpinid="Oscope-148-Pin0" endpinid="Node-187-0" pointList="36,-304,-64,-304,-64,-324" />
+
+<item itemtype="Connector" uid="Connector-159" startpinid="Node-187-2" endpinid="tiny85-146-PORTB4" pointList="-64,-324,-64,-356,-48,-356" />
+
+<item itemtype="Connector" uid="Connector-180" startpinid="Node-195-1" endpinid="Capacitor-194-rPin" pointList="-64,-384,-168,-384" />
+
+<item itemtype="Connector" uid="Connector-181" startpinid="LAnalizer-150-Pin3" endpinid="Node-195-0" pointList="164,-436,-64,-436,-64,-384" />
+
+<item itemtype="Connector" uid="Connector-182" startpinid="Node-195-2" endpinid="tiny85-146-PORTB3" pointList="-64,-384,-64,-364,-48,-364" />
+
+<item itemtype="Connector" uid="Connector-183" startpinid="Capacitor-194-lPin" endpinid="Resistor-161-lPin" pointList="-200,-384,-216,-384,-216,-348,-204,-348" />
+
+<item itemtype="Connector" uid="Connector-185" startpinid="Capacitor-162-lPin" endpinid="Node-196-1" pointList="-180,-296,-180,-300,-168,-300,-168,-324" />
+
+<item itemtype="Connector" uid="Connector-186" startpinid="Node-163-1" endpinid="Node-196-0" pointList="-172,-324,-168,-324" />
+
+<item itemtype="Connector" uid="Connector-187" startpinid="Node-196-2" endpinid="Node-187-1" pointList="-168,-324,-64,-324" />
+
+</circuit>
